@@ -5,44 +5,61 @@ using namespace std;
 class Graph {
 private:
     int vertices;
-    vector<vector<int>> adjList;
+    vector<vector<int>> adjMatrix;
 
 public:
     // Constructor
     Graph(int v) {
         vertices = v;
-        adjList.resize(v);
+        adjMatrix.resize(v, vector<int>(v, 0));
     }
 
-    // Add edge to the graph
+    // Add edge for undirected graph
     void addEdge(int src, int dest) {
-        adjList[src].push_back(dest);
-        // For undirected graph, uncomment the line below
-        // adjList[dest].push_back(src);
+        if (src >= 0 && src < vertices && dest >= 0 && dest < vertices) {
+            adjMatrix[src][dest] = 1;
+            adjMatrix[dest][src] = 1;
+        }
     }
 
-    // Display the adjacency list
+    // Add edge for directed graph
+    void addDirectedEdge(int src, int dest) {
+        if (src >= 0 && src < vertices && dest >= 0 && dest < vertices) {
+            adjMatrix[src][dest] = 1;
+        }
+    }
+
+    // Remove edge
+    void removeEdge(int src, int dest) {
+        if (src >= 0 && src < vertices && dest >= 0 && dest < vertices) {
+            adjMatrix[src][dest] = 0;
+            adjMatrix[dest][src] = 0;
+        }
+    }
+
+    // Display adjacency matrix
     void display() {
+        cout << "Adjacency Matrix:\n";
         for (int i = 0; i < vertices; i++) {
-            cout << "Vertex " << i << ": ";
-            for (int j : adjList[i]) {
-                cout << j << " ";
+            for (int j = 0; j < vertices; j++) {
+                cout << adjMatrix[i][j] << " ";
             }
             cout << endl;
         }
     }
 
-    // Get adjacent vertices of a given vertex
-    vector<int> getAdjacent(int vertex) {
-        return adjList[vertex];
+    // Check if edge exists
+    bool hasEdge(int src, int dest) {
+        if (src >= 0 && src < vertices && dest >= 0 && dest < vertices) {
+            return adjMatrix[src][dest] == 1;
+        }
+        return false;
     }
 };
 
 int main() {
-    // Create a graph with 5 vertices
     Graph g(5);
 
-    // Add edges
     g.addEdge(0, 1);
     g.addEdge(0, 4);
     g.addEdge(1, 2);
@@ -51,8 +68,6 @@ int main() {
     g.addEdge(2, 3);
     g.addEdge(3, 4);
 
-    // Display the graph
-    cout << "Graph Adjacency List Representation:" << endl;
     g.display();
 
     return 0;
